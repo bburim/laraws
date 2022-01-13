@@ -15,6 +15,8 @@ phases:
       - IMAGE_TAG=1.0
   build:
     commands:
+      - echo $REPOSITORY_URI
+      - echo $IMAGE_TAG
       - echo Build started on `date`
       - echo installing composer..
       - composer install
