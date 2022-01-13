@@ -9,7 +9,7 @@ phases:
       - echo Logging in to Amazon ECR....
       - aws --version
       # login to Elastic container registry
-      - eval $(aws ecr get-login --region us-east-1 --no-include-email | sed 's|https://||')
+      - eval $(aws ecr get-login --region eu-north-1 --no-include-email | sed 's|https://||')
       - REPOSITORY_URI=690578247312.dkr.ecr.eu-north-1.amazonaws.com/bburim/laraws
       - IMAGE_TAG=1.0
   build:
@@ -21,9 +21,12 @@ phases:
       - cp .env.example .env
       - echo generating app key
       - php artisan key:generate
+      - php artisan cache:clear
+      - php artisan config:clear
+      - php artisan migrate --force
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag $REPOSITORY_URI:latest
   post_build:
     commands:
       - echo Build completed on `date`
